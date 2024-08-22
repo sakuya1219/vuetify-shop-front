@@ -1,61 +1,96 @@
 <template>
-  <v-card>
-    <v-img :src="image" cover height="200"></v-img>
-    <v-card-title>
-      <router-link :to="'/products/' + _id">{{ name }}</router-link>
-    </v-card-title>
-    <v-card-subtitle>${{ price }}</v-card-subtitle>
-    <v-card-text>
-      {{ description }}
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn
-        color="primary"
-        prepend-icon="mdi-cart"
-        @click="addCart"
-        :loading="loading"
-        >加入購物車</v-btn
-      >
-    </v-card-actions>
+  <v-card @click="goToProductDetails" class="hover-card">
+    <v-img :src="image" class="full-image"></v-img>
+    <div class="overlay">
+      <v-card-title class="title-center">
+        {{ name }}
+      </v-card-title>
+      <v-card-subtitle class="subtitle-center">
+        {{ age }} 歲
+      </v-card-subtitle>
+      <v-card-text class="text-center">
+        {{ breed }}
+        <br />
+        <span :class="adoptable ? 'status-green' : 'status-red'">
+          <v-icon :color="adoptable ? 'green' : 'red'" small>mdi-cat</v-icon>
+          &nbsp;
+          {{ adoptable ? '閒置中' : '上工中' }}
+        </span>
+      </v-card-text>
+      <v-card-text class="description">
+        {{ description }}
+      </v-card-text>
+    </div>
   </v-card>
 </template>
 
 <script setup>
-import { useUserStore } from "@/stores/user";
-import { useRouter } from "vue-router";
-import { useSnackbar } from "vuetify-use-dialog";
-import { ref } from "vue";
+import { useRouter } from 'vue-router';
 
-const user = useUserStore();
 const router = useRouter();
-const createSnackbar = useSnackbar();
+const props = defineProps({
+  _id: String,
+  image: String,
+  name: String,
+  age: Number,
+  description: String,
+  adoptable: Boolean,
+  breed: String
+});
 
-const props = defineProps([
-  "_id",
-  "category",
-  "description",
-  "image",
-  "name",
-  "price",
-  "sell",
-]);
-
-const loading = ref(false);
-
-const addCart = async () => {
-  if (!user.isLogin) {
-    router.push("/login");
-    return;
-  }
-  loading.value = true;
-  const result = await user.addCart(props._id, 1);
-  createSnackbar({
-    text: result.text,
-    snackbarProps: {
-      color: result.color,
-    },
-  });
-  loading.value = false;
+const goToProductDetails = () => {
+  router.push(`/products/${props._id}`);
 };
 </script>
+
+<style scoped>
+.hover-card {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  height: 500px;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+}
+
+.full-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 35%; /* 覆蓋下方 25% */
+  background-color: rgba(0, 0, 0, 0.7); /* 黑色背景，70%透明度 */
+  color: white;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title-center,
+.subtitle-center,
+.text-center {
+  text-align: center;
+  margin: 0; /* 移除默认的 margin */
+  padding: 2px 0; /* 增加一些 padding 确保内容不挤在一起 */
+}
+
+.status-green,
+.status-red {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.description {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0;
+}
+</style>

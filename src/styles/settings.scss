@@ -8,3 +8,229 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+// 主要顏色變量
+$primary-color: #ff9800;
+$secondary-color: #181818;
+$background-color: #2e2e2e;
+$text-color: #ffffff;
+
+// 基本樣式
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: $background-color;
+  color: $text-color;
+}
+
+// Hero 部分樣式
+.hero-section {
+  position: relative;
+  text-align: center;
+
+  .hero-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: $text-color;
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// 內容區域樣式
+.content-section {
+  display: flex;
+  margin: 0;
+
+  .content-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .content-text {
+    display: flex;
+    align-items: center;
+    background-color: $secondary-color;
+    color: $text-color;
+
+    .text-container {
+      padding: 20px;
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+      }
+
+      v-btn {
+        background-color: $primary-color;
+        color: $text-color;
+      }
+    }
+  }
+}
+
+// 橫幅區域樣式
+.banner-section {
+  margin: 0;
+  padding: 0;
+
+  .banner-image {
+    width: 100%;
+    height: auto;
+  }
+}
+
+// 中間介紹段落樣式
+.intro-section {
+  padding: 100px 50px;
+  text-align: center;
+  background-color: $secondary-color;
+  color: $text-color;
+
+  .intro-text {
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.5rem;
+    }
+
+    br {
+      line-height: 2rem; // 調整 br 的高度以增加段落間距
+    }
+  }
+}
+
+// 訂位資訊區域樣式
+.reserve-section {
+  position: relative;
+  padding: 50px;
+  color: $text-color;
+
+  .reserve-background {
+    background-image: url("https://picsum.photos/1920/1080?random=5");
+    background-size: cover;
+    background-attachment: fixed;
+    filter: brightness(50%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .reserve-content {
+    position: relative;
+    z-index: 2;
+
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+// 響應式設計
+@media (max-width: 600px) {
+  .hero-overlay {
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .content-section {
+    flex-direction: column;
+
+    .content-text {
+      padding: 10px;
+
+      .text-container {
+        h2 {
+          font-size: 1.5rem;
+        }
+
+        p {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .intro-section {
+    padding: 50px 20px;
+
+    .intro-text {
+      h2 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .reserve-section {
+    padding: 30px;
+
+    .reserve-content {
+      h2 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1.25rem;
+      }
+
+      ul {
+        li {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}

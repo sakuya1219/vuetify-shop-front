@@ -39,99 +39,99 @@
 </template>
 
 <script setup>
-import { definePage } from "vue-router/auto";
-import { useApi } from "@/composables/axios";
-import { useRouter } from "vue-router";
-import { ref, computed } from "vue";
-import { useSnackbar } from "vuetify-use-dialog";
-import { useUserStore } from "@/stores/user";
+import { definePage } from 'vue-router/auto'
+import { useApi } from '@/composables/axios'
+import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useSnackbar } from 'vuetify-use-dialog'
+import { useUserStore } from '@/stores/user'
 
 definePage({
   meta: {
-    title: "購物網 | 購物車",
+    title: '購物網 | 購物車',
     login: true,
-    admin: false,
-  },
-});
+    admin: false
+  }
+})
 
-const { apiAuth } = useApi();
-const router = useRouter();
-const createSnackbar = useSnackbar();
-const user = useUserStore();
+const { apiAuth } = useApi()
+const router = useRouter()
+const createSnackbar = useSnackbar()
+const user = useUserStore()
 
-const items = ref([]);
+const items = ref([])
 const headers = [
-  { title: "品名", key: "p_id.name" },
-  { title: "單價", key: "p_id.price" },
-  { title: "數量", key: "quantity" },
+  { title: '品名', key: 'p_id.name' },
+  { title: '單價', key: 'p_id.price' },
+  { title: '數量', key: 'quantity' },
   {
-    title: "總價",
-    key: "total",
-    value: (item) => item.p_id.price * item.quantity,
+    title: '總價',
+    key: 'total',
+    value: (item) => item.p_id.price * item.quantity
   },
-  { title: "操作", key: "action" },
-];
+  { title: '操作', key: 'action' }
+]
 
 const loadItems = async () => {
   try {
-    const { data } = await apiAuth.get("/user/cart");
-    items.value = data.result;
+    const { data } = await apiAuth.get('/user/cart')
+    items.value = data.result
   } catch (error) {
-    console.log(error);
+    console.log(error)
     createSnackbar({
-      text: error?.response?.data?.message || "發生錯誤",
+      text: error?.response?.data?.message || '發生錯誤',
       snackbarProps: {
-        color: "red",
-      },
-    });
+        color: 'red'
+      }
+    })
   }
-};
-loadItems();
+}
+loadItems()
 
 const total = computed(() => {
   return items.value.reduce((total, current) => {
-    return total + current.quantity * current.p_id.price;
-  }, 0);
-});
+    return total + current.quantity * current.p_id.price
+  }, 0)
+})
 
 const canCheckout = computed(() => {
-  return items.value.length > 0 && !items.value.some((item) => !item.p_id.sell);
-});
+  return items.value.length > 0 && !items.value.some((item) => !item.p_id.sell)
+})
 
-const loading = ref(false);
+const loading = ref(false)
 const checkout = async () => {
-  loading.value = true;
+  loading.value = true
 
-  const result = await user.checkout();
+  const result = await user.checkout()
 
   createSnackbar({
     text: result.text,
     snackbarProps: {
-      color: result.color,
-    },
-  });
+      color: result.color
+    }
+  })
 
-  if (result.color === "green") {
-    router.push("/orders");
+  if (result.color === 'green') {
+    router.push('/orders')
   }
 
-  loading.value = false;
-};
+  loading.value = false
+}
 
 const addCart = async (product, quantity) => {
-  const result = await user.addCart(product, quantity);
+  const result = await user.addCart(product, quantity)
   createSnackbar({
     text: result.text,
     snackbarProps: {
-      color: result.color,
-    },
-  });
-  if (result.color === "green") {
-    const idx = items.value.findIndex((item) => item.p_id._id === product);
-    items.value[idx].quantity += quantity;
+      color: result.color
+    }
+  })
+  if (result.color === 'green') {
+    const idx = items.value.findIndex((item) => item.p_id._id === product)
+    items.value[idx].quantity += quantity
     if (items.value[idx].quantity <= 0) {
-      items.value.splice(idx, 1);
+      items.value.splice(idx, 1)
     }
   }
-};
+}
 </script>

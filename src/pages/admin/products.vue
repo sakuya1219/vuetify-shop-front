@@ -2,10 +2,10 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <h1 class="text-center">商品管理</h1>
+        <h1 class="text-center">貓咪管理</h1>
       </v-col>
       <v-col cols="12">
-        <v-btn color="green" @click="openDialog(null)">新增商品</v-btn>
+        <v-btn color="green" @click="openDialog(null)">新增貓咪</v-btn>
       </v-col>
       <v-col cols="12">
         <v-data-table-server
@@ -44,6 +44,12 @@
               color="blue"
               @click="openDialog(item)"
             ></v-btn>
+            <v-btn
+              icon="mdi-delete"
+              variant="text"
+              color="red"
+              @click="deleteCat(item._id)"
+            ></v-btn>
           </template>
         </v-data-table-server>
       </v-col>
@@ -52,7 +58,7 @@
   <v-dialog v-model="dialog.open" persistent width="500">
     <v-form @submit.prevent="submit" :disabled="isSubmitting">
       <v-card>
-        <v-card-title>{{ dialog.id ? "編輯商品" : "新增商品" }}</v-card-title>
+        <v-card-title>{{ dialog.id ? "編輯貓咪" : "新增貓咪" }}</v-card-title>
         <v-card-text>
           <v-text-field
             label="名稱"
@@ -60,25 +66,25 @@
             :error-messages="name.errorMessage.value"
           ></v-text-field>
           <v-text-field
-            label="價格"
+            label="年齡"
             type="number"
             min="0"
             v-model="price.value.value"
             :error-messages="price.errorMessage.value"
           ></v-text-field>
           <v-select
-            label="分類"
+            label="品種"
             :items="categories"
             v-model="category.value.value"
             :error-messages="category.errorMessage.value"
           ></v-select>
           <v-checkbox
-            label="上架"
+            label="點檯"
             v-model="sell.value.value"
             :error-messages="sell.errorMessage.value"
           ></v-checkbox>
           <v-textarea
-            label="說明"
+            label="介紹"
             v-model="description.value.value"
             :error-messages="description.errorMessage.value"
           ></v-textarea>
@@ -110,173 +116,194 @@
 </template>
 
 <script setup>
-import { definePage } from "vue-router/auto";
-import { ref } from "vue";
-import * as yup from "yup";
-import { useForm, useField } from "vee-validate";
-import { useApi } from "@/composables/axios";
-import { useSnackbar } from "vuetify-use-dialog";
+import { definePage } from 'vue-router/auto'
+import { ref } from 'vue'
+import * as yup from 'yup'
+import { useForm, useField } from 'vee-validate'
+import { useApi } from '@/composables/axios'
+import { useSnackbar } from 'vuetify-use-dialog'
 
 definePage({
   meta: {
-    title: "購物網 | 商品管理",
+    title: '貓咪酒吧 | 貓咪管理',
     login: true,
-    admin: true,
-  },
-});
+    admin: true
+  }
+})
 
-const { apiAuth } = useApi();
-const createSnackbar = useSnackbar();
+const { apiAuth } = useApi()
+const createSnackbar = useSnackbar()
 
-const fileAgent = ref(null);
+const fileAgent = ref(null)
 
 const dialog = ref({
   // 編輯對話框的狀態
   open: false,
   // 紀錄編輯中的 id，沒有就是新增，有就是編輯
-  id: "",
-});
+  id: ''
+})
 
 const openDialog = (item) => {
   if (item) {
-    dialog.value.id = item._id;
-    name.value.value = item.name;
-    price.value.value = item.price;
-    description.value.value = item.description;
-    category.value.value = item.category;
-    sell.value.value = item.sell;
+    dialog.value.id = item._id
+    name.value.value = item.name
+    price.value.value = item.age
+    description.value.value = item.description
+    category.value.value = item.breed
+    sell.value.value = item.adoptable
   } else {
-    dialog.value.id = "";
+    dialog.value.id = ''
   }
-  dialog.value.open = true;
-};
+  dialog.value.open = true
+}
 
 const closeDialog = () => {
-  dialog.value.open = false;
-  resetForm();
-  fileAgent.value.deleteFileRecord();
-};
+  dialog.value.open = false
+  resetForm()
+  fileAgent.value.deleteFileRecord()
+}
 
-const categories = ["衣服", "手機", "遊戲", "食品"];
+const categories = ['品種1', '品種2', '品種3', '品種4']
 const schema = yup.object({
-  name: yup.string().required("商品名稱必填"),
+  name: yup.string().required('貓咪名稱必填'),
   price: yup
     .number()
-    .typeError("商品價格格式錯誤")
-    .required("商品價格必填")
-    .min(0, "商品價格不能小於 0"),
-  description: yup.string().required("商品說明必填"),
+    .typeError('貓咪年齡格式錯誤')
+    .required('貓咪年齡必填')
+    .min(1, '貓咪年齡不能小於 1'),
+  description: yup.string().required('貓咪介紹必填'),
   category: yup
     .string()
-    .required("商品分類必填")
-    .test("isCategory", "商品分類錯誤", (value) => {
-      return categories.includes(value);
+    .required('貓咪品種必填')
+    .test('isCategory', '貓咪品種錯誤', (value) => {
+      return categories.includes(value)
     }),
-  sell: yup.boolean(),
-});
+  sell: yup.boolean()
+})
 const { handleSubmit, isSubmitting, resetForm } = useForm({
   validationSchema: schema,
   initialValues: {
-    name: "",
+    name: '',
     price: 0,
-    description: "",
-    category: "",
-    sell: true,
-  },
-});
-const name = useField("name");
-const price = useField("price");
-const description = useField("description");
-const category = useField("category");
-const sell = useField("sell");
+    description: '',
+    category: '',
+    sell: true
+  }
+})
+const name = useField('name')
+const price = useField('price')
+const description = useField('description')
+const category = useField('category')
+const sell = useField('sell')
 
-const fileRecords = ref([]);
-const rawFileRecords = ref([]);
+const fileRecords = ref([])
+const rawFileRecords = ref([])
 
 const submit = handleSubmit(async (values) => {
-  if (fileRecords.value[0]?.error) return;
-  if (dialog.value.id.length === 0 && fileRecords.value.length < 1) return;
+  if (fileRecords.value[0]?.error) return
+  if (dialog.value.id.length === 0 && fileRecords.value.length < 1) return
 
   try {
-    const fd = new FormData();
+    const fd = new FormData()
     // fd.append(key, value)
-    fd.append("name", values.name);
-    fd.append("price", values.price);
-    fd.append("description", values.description);
-    fd.append("category", values.category);
-    fd.append("sell", values.sell);
+    fd.append('name', values.name)
+    fd.append('age', values.price)
+    fd.append('description', values.description)
+    fd.append('breed', values.category)
+    fd.append('adoptable', values.sell)
 
     if (fileRecords.value.length > 0) {
-      fd.append("image", fileRecords.value[0].file);
+      fd.append('image', fileRecords.value[0].file)
     }
 
-    if (dialog.value.id === "") {
-      await apiAuth.post("/product", fd);
+    if (dialog.value.id === '') {
+      await apiAuth.post('/product', fd)
     } else {
-      await apiAuth.patch("/product/" + dialog.value.id, fd);
+      await apiAuth.patch('/product/' + dialog.value.id, fd)
     }
 
     createSnackbar({
-      text: dialog.value.id === "" ? "新增成功" : "編輯成功",
+      text: dialog.value.id === '' ? '新增成功' : '編輯成功',
       snackbarProps: {
-        color: "green",
-      },
-    });
-    closeDialog();
-    tableLoadItems(true);
+        color: 'green'
+      }
+    })
+    closeDialog()
+    tableLoadItems(true) // 刷新列表
   } catch (error) {
-    console.log(error);
+    console.log(error)
     createSnackbar({
-      text: error?.response?.data?.message || "發生錯誤",
+      text: error?.response?.data?.message || '發生錯誤',
       snackbarProps: {
-        color: "red",
-      },
-    });
+        color: 'red'
+      }
+    })
   }
-});
+})
 
-const tableItemsPerPage = ref(10);
-const tableSortBy = ref([{ key: "createdAt", order: "desc" }]);
-const tablePage = ref(1);
-const tableItems = ref([]);
-const tableHeaders = [
-  { title: "圖片", align: "center", sortable: false, key: "image" },
-  { title: "名稱", align: "center", sortable: true, key: "name" },
-  { title: "價格", align: "center", sortable: true, key: "price" },
-  { title: "分類", align: "center", sortable: true, key: "category" },
-  { title: "上架", align: "center", sortable: true, key: "sell" },
-  { title: "操作", align: "center", sortable: false, key: "action" },
-];
-const tableLoading = ref(true);
-const tableItemsLength = ref(0);
-const tableSearch = ref("");
-const tableLoadItems = async (reset) => {
-  if (reset) tablePage.value = 1;
-  tableLoading.value = true;
+const deleteCat = async (id) => {
   try {
-    const { data } = await apiAuth.get("/product/all", {
+    await apiAuth.delete(`/product/${id}`)
+    createSnackbar({
+      text: '刪除成功',
+      snackbarProps: {
+        color: 'green'
+      }
+    })
+    tableLoadItems(true) // 刷新列表
+  } catch (error) {
+    console.log(error)
+    createSnackbar({
+      text: error?.response?.data?.message || '刪除失敗',
+      snackbarProps: {
+        color: 'red'
+      }
+    })
+  }
+}
+
+const tableItemsPerPage = ref(10)
+const tableSortBy = ref([{ key: 'createdAt', order: 'desc' }])
+const tablePage = ref(1)
+const tableItems = ref([])
+const tableHeaders = [
+  { title: '圖片', align: 'center', sortable: false, key: 'image' },
+  { title: '名稱', align: 'center', sortable: true, key: 'name' },
+  { title: '年齡', align: 'center', sortable: true, key: 'age' },
+  { title: '品種', align: 'center', sortable: true, key: 'breed' },
+  { title: '點檯', align: 'center', sortable: true, key: 'adoptable' },
+  { title: '操作', align: 'center', sortable: false, key: 'action' }
+]
+const tableLoading = ref(true)
+const tableItemsLength = ref(0)
+const tableSearch = ref('')
+const tableLoadItems = async (reset) => {
+  if (reset) tablePage.value = 1
+  tableLoading.value = true
+  try {
+    const { data } = await apiAuth.get('/product/all', {
       params: {
         page: tablePage.value,
         itemsPerPage: tableItemsPerPage.value,
-        sortBy: tableSortBy.value[0]?.key || "createdAt",
-        sortOrder: tableSortBy.value[0]?.order || "desc",
-        search: tableSearch.value,
-      },
-    });
-    tableItems.value.splice(0, tableItems.value.length, ...data.result.data);
-    tableItemsLength.value = data.result.total;
+        sortBy: tableSortBy.value[0]?.key || 'createdAt',
+        sortOrder: tableSortBy.value[0]?.order || 'desc',
+        search: tableSearch.value
+      }
+    })
+    tableItems.value.splice(0, tableItems.value.length, ...data.result.data)
+    tableItemsLength.value = data.result.total
   } catch (error) {
-    console.log(error);
+    console.log(error)
     createSnackbar({
-      text: error?.response?.data?.message || "發生錯誤",
+      text: error?.response?.data?.message || '發生錯誤',
       snackbarProps: {
-        color: "red",
-      },
-    });
+        color: 'red'
+      }
+    })
   }
-  tableLoading.value = false;
-};
-tableLoadItems();
+  tableLoading.value = false
+}
+tableLoadItems()
 </script>
 
 <route lang="yaml">
