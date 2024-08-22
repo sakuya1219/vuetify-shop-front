@@ -1,43 +1,37 @@
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
-
-// Composables
 import {
   createRouter,
   createWebHashHistory,
-  START_LOCATION,
-} from "vue-router/auto";
-import { setupLayouts } from "virtual:generated-layouts";
-import { useUserStore } from "@/stores/user";
+  START_LOCATION
+} from 'vue-router/auto'
+import { setupLayouts } from 'virtual:generated-layouts'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
-  extendRoutes: setupLayouts,
-});
+  extendRoutes: setupLayouts
+})
 
 router.beforeEach(async (to, from, next) => {
-  const user = useUserStore();
+  const user = useUserStore()
 
   if (from === START_LOCATION) {
-    await user.profile();
+    await user.profile()
   }
 
-  if (user.isLogin && ["/register", "/login"].includes(to.path)) {
-    next("/");
+  if (user.isLogin && ['/register', '/login'].includes(to.path)) {
+    next('/')
   } else if (to.meta.login && !user.isLogin) {
-    next("/login");
+    next({ path: '/login', query: { redirect: to.fullPath } })
   } else if (to.meta.admin && !user.isAdmin) {
-    next("/");
+    next('/')
   } else {
-    next();
+    next()
   }
-});
+})
 
-router.afterEach((to, from) => {
-  document.title = to.meta.title;
-});
+router.afterEach((to) => {
+  document.title = to.meta.title || '貓咪酒吧'
+  window.scrollTo(0, 0)
+})
 
-export default router;
+export default router

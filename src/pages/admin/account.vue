@@ -2,21 +2,15 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <h1 class="text-center">預約管理</h1>
+        <h1 class="text-center">會員管理</h1>
       </v-col>
       <v-col cols="12">
         <v-data-table :items="items" :headers="headers">
-          <template #[`item.timeSlot`]="data">
-            {{ formatDate(data.item.date) }} {{ data.item.timeSlot }}
-          </template>
-          <template #[`item.numPeople`]="data">
-            {{ data.item.numPeople }} 人
-          </template>
-          <template #[`item.createdAt`]="data">
-            {{ formatDate(data.item.createdAt) }}
+          <template #[`item.role`]="{ item }">
+            {{ formatRole(item.role) }}
           </template>
           <template #[`item.action`]="{ item }">
-            <v-btn icon="mdi-delete" variant="text" color="red" @click="deleteReservation(item._id)"></v-btn>
+            <v-btn icon="mdi-delete" variant="text" color="red" @click="deleteAccount(item._id)"></v-btn>
           </template>
         </v-data-table>
       </v-col>
@@ -32,7 +26,7 @@ import { definePage } from 'vue-router/auto'
 
 definePage({
   meta: {
-    title: '貓咪酒吧 | 預約管理',
+    title: '貓咪酒吧 | 會員管理',
     login: true,
     admin: true,
     layout: 'admin'  // 使用 admin 布局
@@ -44,29 +38,15 @@ const createSnackbar = useSnackbar()
 
 const items = ref([])
 const headers = [
-  { title: '編號', key: '_id' },
-  { title: '帳號', key: 'user.account' },
-  {
-    title: '日期與時段',
-    key: 'timeSlot',
-    value: (item) => `${formatDate(item.date)} ${item.timeSlot}`
-  },
-  {
-    title: '人數',
-    key: 'numPeople',
-    value: (item) => `${item.numPeople} 人`
-  },
-  {
-    title: '創建日期',
-    key: 'createdAt',
-    value: (item) => formatDate(item.createdAt)
-  },
-  { title: '操作', key: 'action', sortable: false }
+  { title: '帳號', key: 'account' },
+  { title: '身分組', key: 'role' },
+  { title: '電子郵件', key: 'email' },
+  { title: '刪除', key: 'action', sortable: false }
 ]
 
 const loadItems = async () => {
   try {
-    const { data } = await apiAuth.get('/order/all')
+    const { data } = await apiAuth.get('/account')
     items.value.splice(0, items.value.length, ...data.result)
   } catch (error) {
     createSnackbar({
@@ -77,11 +57,10 @@ const loadItems = async () => {
     })
   }
 }
-loadItems()
 
-const deleteReservation = async (id) => {
+const deleteAccount = async (id) => {
   try {
-    await apiAuth.delete(`/order/${id}`)
+    await apiAuth.delete(`/account/${id}`)
     createSnackbar({
       text: '刪除成功',
       snackbarProps: {
@@ -99,11 +78,11 @@ const deleteReservation = async (id) => {
   }
 }
 
-// 日期格式化函數
-const formatDate = (dateStr) => {
-  const date = new Date(dateStr)
-  return date.toISOString().split('T')[0]  // 只顯示日期部分
+const formatRole = (role) => {
+  return role === 1 ? '管理員' : '會員';
 }
+
+loadItems()
 </script>
 
 <style scoped>

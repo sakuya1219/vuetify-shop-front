@@ -36,70 +36,66 @@
 </template>
 
 <script setup>
-import { useForm, useField } from "vee-validate";
-import * as yup from "yup";
-import { useRouter } from "vue-router";
-import validator from "validator";
-import { definePage } from "vue-router/auto";
-import { useUserStore } from "@/stores/user";
-import { useSnackbar } from "vuetify-use-dialog";
+import { useForm, useField } from 'vee-validate'
+import * as yup from 'yup'
+import { useRouter } from 'vue-router'
+import validator from 'validator'
+import { definePage } from 'vue-router/auto'
+import { useUserStore } from '@/stores/user'
+import { useSnackbar } from 'vuetify-use-dialog'
 
 definePage({
   meta: {
-    title: "購物網 | 登入",
+    title: '貓咪酒吧 | 登入',
     login: false,
-    admin: false,
-  },
-});
+    admin: false
+  }
+})
 
-const router = useRouter();
-const user = useUserStore();
-const createSnackbar = useSnackbar();
+const router = useRouter()
+const user = useUserStore()
+const createSnackbar = useSnackbar()
 
 const schema = yup.object({
   account: yup
     .string()
-    .required("使用者帳號必填")
-    .min(4, "使用者帳號長度不符")
-    .max(20, "使用者帳號長度不符")
-    .test(
-      // .test(自訂驗證名稱, 錯誤訊息, 驗證 function)
-      "isAlphanumeric",
-      "使用者帳號格式錯誤",
-      (value) => {
-        return validator.isAlphanumeric(value);
-      }
-    ),
+    .required('使用者帳號必填')
+    .min(4, '使用者帳號長度不符')
+    .max(20, '使用者帳號長度不符')
+    .test('isAlphanumeric', '使用者帳號格式錯誤', (value) => {
+      return validator.isAlphanumeric(value)
+    }),
   password: yup
     .string()
-    .required("使用者密碼必填")
-    .min(4, "使用者密碼長度不符")
-    .max(20, "使用者密碼長度不符"),
-});
+    .required('使用者密碼必填')
+    .min(4, '使用者密碼長度不符')
+    .max(20, '使用者密碼長度不符')
+})
 
 const { handleSubmit, isSubmitting } = useForm({
-  validationSchema: schema,
-});
-const account = useField("account");
-const password = useField("password");
+  validationSchema: schema
+})
+const account = useField('account')
+const password = useField('password')
 
 const submit = handleSubmit(async (values) => {
-  const result = await user.login(values);
-  if (result === "登入成功") {
+  const result = await user.login(values)
+  if (result === '登入成功') {
     createSnackbar({
       text: result,
       snackbarProps: {
-        color: "green",
-      },
-    });
-    router.push("/");
+        color: 'green'
+      }
+    })
+    const redirectTo = router.currentRoute.value.query.redirect || '/'
+    router.push(redirectTo)
   } else {
     createSnackbar({
       text: result,
       snackbarProps: {
-        color: "red",
-      },
-    });
+        color: 'red'
+      }
+    })
   }
-});
+})
 </script>
