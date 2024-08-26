@@ -12,7 +12,7 @@
           <h3 class="footer-title">聯絡我們</h3>
           <ul>
             <li>地址：台中市北區青島路一段</li>
-            <li>電話：02-2680-9427 </li>
+            <li>電話：04-0315-0720 </li>
             <li>郵件：spiritsCatClub@gmail.com</li>
           </ul>
         </v-col>
