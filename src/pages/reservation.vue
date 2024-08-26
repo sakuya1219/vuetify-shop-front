@@ -92,9 +92,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { definePage } from 'vue-router/auto'
-import { useUserStore } from '@/stores/user'
 import { useSnackbar } from 'vuetify-use-dialog'
 import { useApi } from '@/composables/axios'
 
@@ -105,31 +104,25 @@ definePage({
   }
 })
 
-const user = useUserStore()
 const createSnackbar = useSnackbar()
 const { apiAuth } = useApi()
 
-// 預約表單相關狀態
 const selectedDate = ref(null)
 const timeSlot = ref(null)
-const numPeople = ref(1)  // 新增的人數選擇
+const numPeople = ref(1)
 const isSubmitting = ref(false)
-const minDate = ref(new Date())  // 確保用戶不能選擇過去的日期
+const minDate = ref(new Date())
 
-const availableTimeSlots = computed(() => {
-  return [
-    '13:00 - 15:00',
-    '15:00 - 17:00',
-    '17:00 - 19:00',
-    '19:00 - 21:00',
-    '21:00 - 23:00'
-  ]
-})
+const availableTimeSlots = [
+  '13:00 - 15:00',
+  '15:00 - 17:00',
+  '17:00 - 19:00',
+  '19:00 - 21:00',
+  '21:00 - 23:00'
+]
 
-// Tab 切換狀態
 const activeTab = ref('reservationForm')
 
-// 預約查詢相關狀態
 const items = ref([])
 const headers = [
   {
@@ -141,7 +134,7 @@ const headers = [
     key: 'timeSlot'
   },
   {
-    title: '預約人數',  // 新增人數顯示
+    title: '預約人數',
     key: 'numPeople'
   },
   {
@@ -182,7 +175,7 @@ const submitReservation = async () => {
     await apiAuth.post('/order', {
       date: selectedDate.value,
       timeSlot: timeSlot.value,
-      numPeople: numPeople.value  // 傳遞選擇的人數
+      numPeople: numPeople.value
     })
 
     createSnackbar({
@@ -191,11 +184,9 @@ const submitReservation = async () => {
         color: 'green'
       }
     })
-    
-    // 切换到預約紀錄 Tab 并加载最新数据
+
     activeTab.value = 'reservationHistory'
     loadItems()
-
   } catch (error) {
     console.error(error)
     createSnackbar({
@@ -213,4 +204,8 @@ const formatDate = (dateStr) => {
   const date = new Date(dateStr)
   return date.toLocaleDateString('zh-TW', { timeZone: 'Asia/Taipei' })
 }
+
+onMounted(() => {
+  loadItems()
+})
 </script>

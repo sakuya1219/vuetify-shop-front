@@ -163,7 +163,7 @@ const closeDialog = () => {
   fileAgent.value.deleteFileRecord()
 }
 
-const categories = ['品種1', '品種2', '品種3', '品種4']
+const categories = ['蠢貓', '呆貓', '辣貓', '美貓', '帥貓', '酷貓', '可愛貓', '仙女貓', '寶寶貓']
 const schema = yup.object({
   name: yup.string().required('貓咪名稱必填'),
   price: yup

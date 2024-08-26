@@ -2,6 +2,13 @@
   <!-- 手機版側欄 -->
   <v-navigation-drawer v-if="mobile" v-model="drawer">
     <v-list nav>
+      <!-- 回首頁按鈕 -->
+      <v-list-item
+        prepend-icon="mdi-home"
+        to="/"
+        title="回首頁"
+      ></v-list-item>
+
       <template v-for="item in navItems" :key="item.to">
         <v-list-item
           :prepend-icon="item.icon"
@@ -35,8 +42,9 @@
     app
   >
     <v-container class="d-flex align-center justify-center">
-      <!-- 標題 -->
-      <v-btn to="/" :active="false" class="title-btn">貓咪酒吧</v-btn>
+
+      <v-btn to="/" :active="false" class="title-btn"><img src="../assets/sLogo.png" height="50px"></v-btn>
+
       <v-spacer />
       <template v-if="mobile">
         <!-- 手機版漢堡按鈕 -->
@@ -93,8 +101,8 @@ const isHomePage = computed(() => route.path === '/')
 const navItems = computed(() => {
   return [
     { to: '/aboutUs', text: '關於我們', icon: 'mdi-bottle-wine', show: true },
-    { to: '/product', text: '貓咪', icon: 'mdi-cat', show: true },
-    { to: '/menu', text: '菜單', icon: 'mdi-food', show: true },
+    { to: '/product', text: '站檯小貓', icon: 'mdi-cat', show: true },
+    { to: '/menu', text: '酒水小點', icon: 'mdi-food', show: true },
     {
       to: '/reservation',
       text: '預約',
@@ -135,6 +143,12 @@ const logout = async () => {
 </script>
 
 <style scoped>
+.logo-img {
+  height: 45px;
+  object-fit: contain;
+  margin-left: 50px;
+}
+
 .transparent-bar {
   background-color: transparent;
   color: white;
@@ -161,6 +175,7 @@ const logout = async () => {
   display: flex;
   justify-content: space-around;
   width: 60%;
+  width: 60%; /* 调整导航栏宽度来控制按钮间距 */
 }
 
 .title-btn {
@@ -175,5 +190,6 @@ const logout = async () => {
 
 .no-padding-top {
   padding-top: 0 !important;
+  padding-top: 0 !important; /* 消除 v-main 的 padding-top */
 }
 </style>
