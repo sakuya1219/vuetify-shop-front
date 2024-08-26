@@ -41,6 +41,7 @@
             <li>不定時推出特製下酒菜及點心</li>
             <li>捷運中心文清站步行五分鐘</li>
           </ul>
+          <br>
           <v-btn color="orange" to="/aboutUs">ABOUT US</v-btn>
         </div>
       </v-col>
@@ -69,6 +70,7 @@
             <li>我們還有更多的貓</li>
             <li>心動了就趕緊來看看我們的王牌小貓</li>
           </ul>
+          <br>
           <v-btn color="orange" to="/product">ABOUT CATS</v-btn>
         </div>
       </v-col>
@@ -92,6 +94,7 @@
             <li>超過50種威士忌、50種紅白酒</li>
             <li>至於食物...不如吃貓罐罐如何</li>
           </ul>
+          <br>
           <v-btn color="orange" to="/menu">ABOUT WINE</v-btn>
         </div>
       </v-col>
@@ -114,6 +117,7 @@
             <li>馬上</li>
             <li>給老子預約</li>
           </ul>
+          <br>
           <v-btn color="orange" to="/reservation">RESERVATION</v-btn>
         </div>
       </v-col>

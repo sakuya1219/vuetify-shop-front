@@ -48,7 +48,7 @@ import ProductCard from '@/components/ProductCard.vue'
 
 definePage({
   meta: {
-    title: '貓咪酒吧 | 站檯小貓',
+    title: '貓咪酒吧',
     login: false,
     admin: false
   }

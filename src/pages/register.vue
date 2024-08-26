@@ -61,7 +61,7 @@ import { useSnackbar } from 'vuetify-use-dialog'
 
 definePage({
   meta: {
-    title: '貓咪酒吧 | 註冊',
+    title: '貓咪酒吧',
     login: false,
     admin: false
   }

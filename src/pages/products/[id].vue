@@ -2,7 +2,7 @@
   <v-container class="product-container">
     <v-row>
       <v-col cols="12">
-        <h1 class="text-center">{{ product.name }}</h1>
+        <h1 class="text-center product-title">{{ product.name }}</h1>
       </v-col>
 
       <v-col cols="12">
@@ -10,8 +10,10 @@
       </v-col>
 
       <v-col cols="12" class="product-details">
-        <p><strong>年齡:</strong> {{ product.age }} 歲</p>
-        <p><strong>品種:</strong> {{ product.breed }}</p>
+        <div class="centered-info">
+          <p><strong>年齡:</strong> {{ product.age }} 歲</p>
+          <p><strong>品種:</strong> {{ product.breed }}</p>
+        </div>
         <hr>
         <p>{{ product.description }}</p>
       </v-col>
@@ -103,8 +105,26 @@ load()
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.product-title {
+  color: #f1a944;
+}
+
+.centered-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.centered-info p {
+  margin: 10px 0;
+}
+
+.product-details hr {
+  margin: 20px 0;
+}
+
 .product-details p {
   margin: 10px 0;
+  color: white;
 }
 
 .overlay-card {

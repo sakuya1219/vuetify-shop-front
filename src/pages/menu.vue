@@ -1,5 +1,5 @@
 <template>
-  <v-container class="swiper-container">
+  <v-container class="swiper-container" fluid>
     <v-row>
       <v-col cols="12">
         <swiper
@@ -48,15 +48,15 @@ const modules = [EffectCards]
 
 <style scoped>
 .swiper-container {
-  background-image: url('../assets/cat/banner05.jpg'); /* 背景图片路径 */
-  background-size: cover; /* 确保背景图片覆盖整个容器 */
-  background-position: center; /* 背景图片居中显示 */
+  background-image: url('../assets/cat/banner05.jpg');
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  width: 100vw; /* 确保背景宽度为全屏 */
-  height: 100vh; /* 确保背景高度为全屏 */
-  display: flex; /* 使内部内容居中 */
-  align-items: center; /* 垂直居中 */
-  justify-content: center; /* 水平居中 */
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mySwiper {
