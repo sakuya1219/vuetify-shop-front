@@ -104,7 +104,7 @@
       </v-col>
       <v-col cols="12" md="6" class="content-text pa-0">
         <div class="styled-text">
-          <h2><strong><em>立即預約s</em></strong></h2>
+          <h2><strong><em>立即預約</em></strong></h2>
           <hr style="border-color: #f1a944;">
           <br>
           <p>為了維護貓貓們與客人互動的最高品質，以及老闆的疲累程度，本店採用預約制。每日開放五個時段、每個時段接待四組客人，請各位愛貓的酒鬼提前預約。</p>
